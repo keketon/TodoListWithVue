@@ -36,6 +36,13 @@ const app = new Vue({
         state: 0,
       });
       comment.value = '';
+    },
+    doChangeState: function(item) {
+      item.state = item.state ? 0 : 1;
+    },
+    doRemove: function(item) {
+      const index = this.todos.indexOf(item);
+      this.todos.splice(index, 1);
     }
   },
   watch: {
@@ -45,5 +52,8 @@ const app = new Vue({
       },
       deep: true,
     },
+  },
+  created() {
+    this.todos = todoStorage.fetch();
   },
 });
