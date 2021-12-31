@@ -26,8 +26,8 @@
 </template>
 
 <script lang="ts">
-import { Todo } from "@/api/storage";
-import { defineComponent, PropType, reactive } from "vue";
+import { Todo, todoStorage } from "@/api/storage";
+import { defineComponent, PropType, reactive, watch } from "vue";
 
 export default defineComponent({
   name: "Table",
@@ -44,6 +44,14 @@ export default defineComponent({
       const index = reactiveTodos.indexOf(todo);
       reactiveTodos.splice(index, 1);
     };
+
+    watch(
+      reactiveTodos,
+      (newValue) => {
+        todoStorage.save(newValue);
+      },
+      { deep: true }
+    );
 
     return {
       reactiveTodos,
