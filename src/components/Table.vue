@@ -18,8 +18,7 @@
           </button>
         </td>
         <td class="button">
-          <!-- <button v-on:click.meta="doRemove(item)"> -->
-          <button>削除</button>
+          <button @click.meta="doRemove(item)">削除</button>
         </td>
       </tbody>
     </table>
@@ -41,10 +40,15 @@ export default defineComponent({
     const doChangeState = (todo: Todo) => {
       todo.status = todo.status ? 0 : 1;
     };
+    const doRemove = (todo: Todo) => {
+      const index = reactiveTodos.indexOf(todo);
+      reactiveTodos.splice(index, 1);
+    };
 
     return {
       reactiveTodos,
       doChangeState,
+      doRemove,
     };
   },
 });
