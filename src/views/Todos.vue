@@ -34,6 +34,9 @@ export default defineComponent({
 });
 </script>
 
-function refs(arg0: { id: number; comment: string; status: number; }[]): Todos {
-  throw new Error("Function not implemented.");
+<style scoped>
+.todos {
+  max-width: 640px;
+  margin: 0 auto;
 }
+</style>
