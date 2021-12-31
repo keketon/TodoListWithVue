@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Table from "@/components/Table.vue";
-import { Todos } from "@/api/storage";
+import { Todos, todoStorage } from "@/api/storage";
 
 export default defineComponent({
   name: "Todos",
@@ -16,13 +16,7 @@ export default defineComponent({
   },
   setup: (props) => {
     // const labels = {};
-    const todos: Todos = [
-      {
-        id: 1,
-        comment: "おいっすー^^;",
-        status: 0,
-      },
-    ];
+    const todos: Todos = todoStorage.fetch();
     return {
       todos,
     };

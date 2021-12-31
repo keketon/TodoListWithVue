@@ -1,5 +1,16 @@
 <template>
   <div id="table">
+    <!-- TODO: 独立させる -->
+    <div id="label">
+      <label v-for="label in options" v-bind:key="label.value">
+        <input type="radio" v-model="current" v-bind:value="label.value" />{{
+          label.label
+        }}
+      </label>
+
+      <!-- <div>{{ computedTodos.length }} 件を表示中</div> -->
+    </div>
+
     <table>
       <thead>
         <tr>
@@ -9,12 +20,12 @@
           <th class="button">-</th>
         </tr>
       </thead>
-      <tbody v-for="item in reactiveTodos" v-bind:key="item.id">
+      <tbody v-for="item in computedTodos" v-bind:key="item.id">
         <th>{{ item.id }}</th>
         <td>{{ item.comment }}</td>
         <td class="state">
           <button @click="doChangeState(item)">
-            {{ item.status }}
+            {{ computedLabels[item.status] }}
           </button>
         </td>
         <td class="button">
@@ -23,18 +34,21 @@
       </tbody>
     </table>
 
-    <!-- TODO: Formを独立させる -->
-    <h2>新しい作業の追加</h2>
-    <form class="add-form" @submit.prevent="doAdd">
-      コメント <input type="text" v-model="newComment" />
-      <button type="submit">追加</button>
-    </form>
+    <!-- TODO: 独立させる -->
+    <div id="form">
+      <h2>新しい作業の追加</h2>
+      <form class="add-form" @submit.prevent="doAdd">
+        コメント <input type="text" v-model="newComment" />
+        <button type="submit">追加</button>
+      </form>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Todo, todoStorage } from "@/api/storage";
-import { defineComponent, PropType, reactive, ref, watch } from "vue";
+import { sampleLabels } from "@/api/label";
+import { computed, defineComponent, PropType, reactive, ref, watch } from "vue";
 
 export default defineComponent({
   name: "Table",
@@ -54,23 +68,19 @@ export default defineComponent({
 
     const newComment = ref<string>("");
     const doAdd = () => {
-      console.debug("start doAdd");
-      console.debug(`newComment: ${newComment}`);
       if (!newComment.value.length) {
         return;
       }
-
-      console.debug("before push");
 
       reactiveTodos.push({
         id: todoStorage.uid++,
         comment: newComment.value,
         status: 0,
       });
-
-      console.debug("after push");
       newComment.value = "";
     };
+
+    const current = ref(-1);
 
     watch(
       reactiveTodos,
@@ -80,12 +90,29 @@ export default defineComponent({
       { deep: true }
     );
 
+    const computedTodos = computed(() => {
+      return reactiveTodos.filter((el) => {
+        return current.value < 0 ? true : current.value === el.status;
+      });
+    });
+
+    const labels = sampleLabels;
+
+    const computedLabels = computed(() => {
+      return labels.reduce(function (prv, cur) {
+        return Object.assign(prv, { [cur.value]: cur.label });
+      }, {});
+    });
+
     return {
-      reactiveTodos,
+      computedTodos,
       doChangeState,
       doRemove,
       doAdd,
       newComment,
+      options: sampleLabels,
+      computedLabels,
+      current,
     };
   },
 });

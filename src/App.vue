@@ -1,10 +1,10 @@
-/* eslint-disable vue/no-multiple-template-root */
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
     <router-link to="/todos">Todos</router-link>
   </div>
+  <!-- eslint-disable-next-line vue/no-multiple-template-root -->
   <router-view />
 </template>
 
