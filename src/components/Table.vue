@@ -22,12 +22,19 @@
         </td>
       </tbody>
     </table>
+
+    <!-- TODO: Formを独立させる -->
+    <h2>新しい作業の追加</h2>
+    <form class="add-form" @submit.prevent="doAdd">
+      コメント <input type="text" v-model="newComment" />
+      <button type="submit">追加</button>
+    </form>
   </div>
 </template>
 
 <script lang="ts">
 import { Todo, todoStorage } from "@/api/storage";
-import { defineComponent, PropType, reactive, watch } from "vue";
+import { defineComponent, PropType, reactive, ref, watch } from "vue";
 
 export default defineComponent({
   name: "Table",
@@ -45,6 +52,26 @@ export default defineComponent({
       reactiveTodos.splice(index, 1);
     };
 
+    const newComment = ref<string>("");
+    const doAdd = () => {
+      console.debug("start doAdd");
+      console.debug(`newComment: ${newComment}`);
+      if (!newComment.value.length) {
+        return;
+      }
+
+      console.debug("before push");
+
+      reactiveTodos.push({
+        id: todoStorage.uid++,
+        comment: newComment.value,
+        status: 0,
+      });
+
+      console.debug("after push");
+      newComment.value = "";
+    };
+
     watch(
       reactiveTodos,
       (newValue) => {
@@ -57,6 +84,8 @@ export default defineComponent({
       reactiveTodos,
       doChangeState,
       doRemove,
+      doAdd,
+      newComment,
     };
   },
 });
@@ -111,5 +140,8 @@ button {
   background: #0099e4;
   color: #fff;
   cursor: pointer;
+}
+input {
+  margin-right: 8px;
 }
 </style>
