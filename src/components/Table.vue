@@ -9,12 +9,11 @@
           <th class="button">-</th>
         </tr>
       </thead>
-      <tbody v-for="item in todos" v-bind:key="item.id">
+      <tbody v-for="item in reactiveTodos" v-bind:key="item.id">
         <th>{{ item.id }}</th>
         <td>{{ item.comment }}</td>
         <td class="state">
-          <!-- <button v-on:click="doChangeState(item)"> -->
-          <button>
+          <button @click="doChangeState(item)">
             {{ item.status }}
           </button>
         </td>
@@ -28,14 +27,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-// import { Todo, Todos, todoStorage } from "@/api/storage";
+import { Todo } from "@/api/storage";
+import { defineComponent, PropType, reactive } from "vue";
 
 export default defineComponent({
   name: "Table",
   props: {
-    todos: Array,
+    todos: Array as PropType<Array<Todo>>,
     labels: Object,
+  },
+  setup: (props) => {
+    const reactiveTodos = reactive<Array<Todo>>(props.todos ?? []);
+    const doChangeState = (todo: Todo) => {
+      todo.status = todo.status ? 0 : 1;
+    };
+
+    return {
+      reactiveTodos,
+      doChangeState,
+    };
   },
 });
 </script>
