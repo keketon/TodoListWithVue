@@ -1,16 +1,5 @@
 <template>
   <div id="table">
-    <!-- TODO: 独立させる -->
-    <div id="label">
-      <label v-for="label in options" v-bind:key="label.value">
-        <input type="radio" v-model="current" v-bind:value="label.value" />{{
-          label.label
-        }}
-      </label>
-
-      <!-- <div>{{ computedTodos.length }} 件を表示中</div> -->
-    </div>
-
     <table>
       <thead>
         <tr>
@@ -53,11 +42,21 @@ import { computed, defineComponent, PropType, reactive, ref, watch } from "vue";
 export default defineComponent({
   name: "Table",
   props: {
-    todos: Array as PropType<Array<Todo>>,
-    labels: Object,
+    todos: {
+      type: Array as PropType<Array<Todo>>,
+      default: () => [],
+    },
+    labels: {
+      type: Object,
+      default: () => ({}),
+    },
+    labelValue: {
+      type: Number,
+      required: true,
+    },
   },
   setup: (props) => {
-    const reactiveTodos = reactive<Array<Todo>>(props.todos ?? []);
+    const reactiveTodos = reactive<Array<Todo>>(props.todos);
     const doChangeState = (todo: Todo) => {
       todo.status = todo.status ? 0 : 1;
     };
@@ -80,8 +79,6 @@ export default defineComponent({
       newComment.value = "";
     };
 
-    const current = ref(-1);
-
     watch(
       reactiveTodos,
       (newValue) => {
@@ -92,7 +89,7 @@ export default defineComponent({
 
     const computedTodos = computed(() => {
       return reactiveTodos.filter((el) => {
-        return current.value < 0 ? true : current.value === el.status;
+        return props.labelValue < 0 ? true : props.labelValue === el.status;
       });
     });
 
@@ -112,7 +109,6 @@ export default defineComponent({
       newComment,
       options: sampleLabels,
       computedLabels,
-      current,
     };
   },
 });
