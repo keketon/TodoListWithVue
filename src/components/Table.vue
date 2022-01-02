@@ -22,15 +22,6 @@
         </td>
       </tbody>
     </table>
-
-    <!-- TODO: 独立させる -->
-    <div id="form">
-      <h2>新しい作業の追加</h2>
-      <form class="add-form" @submit.prevent="doAdd">
-        コメント <input type="text" v-model="newComment" />
-        <button type="submit">追加</button>
-      </form>
-    </div>
   </div>
 </template>
 
@@ -65,20 +56,6 @@ export default defineComponent({
       reactiveTodos.splice(index, 1);
     };
 
-    const newComment = ref<string>("");
-    const doAdd = () => {
-      if (!newComment.value.length) {
-        return;
-      }
-
-      reactiveTodos.push({
-        id: todoStorage.uid++,
-        comment: newComment.value,
-        status: 0,
-      });
-      newComment.value = "";
-    };
-
     watch(
       reactiveTodos,
       (newValue) => {
@@ -102,11 +79,10 @@ export default defineComponent({
     });
 
     return {
+      reactiveTodos,
       computedTodos,
       doChangeState,
       doRemove,
-      doAdd,
-      newComment,
       options: sampleLabels,
       computedLabels,
     };
