@@ -1,13 +1,11 @@
 // https://jp.vuejs.org/v2/examples/todomvc.html
 // ストレージAPI
-var STORAGE_KEY = 'todos-vuejs-demo';
+var STORAGE_KEY = "todos-vuejs-demo";
 var todoStorage = {
   fetch: function () {
-    var todos = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || '[]'
-    );
+    var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     todos.forEach(function (todo, index) {
-      todo.id = index
+      todo.id = index;
     });
     todoStorage.uid = todos.length;
     return todos;
@@ -19,13 +17,13 @@ var todoStorage = {
 // ストレージAPI
 
 const app = new Vue({
-  el: '#app',
+  el: "#app",
   data: {
     todos: [],
     options: [
-      { value: -1, label: 'すべて' },
-      { value: 0, label: '作業中' },
-      { value: 1, label: '完了' },
+      { value: -1, label: "すべて" },
+      { value: 0, label: "作業中" },
+      { value: 1, label: "完了" },
     ],
     current: -1,
   },
@@ -41,7 +39,7 @@ const app = new Vue({
         comment: comment.value,
         state: 0,
       });
-      comment.value = '';
+      comment.value = "";
     },
     doChangeState: function (item) {
       item.state = item.state ? 0 : 1;
@@ -49,7 +47,7 @@ const app = new Vue({
     doRemove: function (item) {
       const index = this.todos.indexOf(item);
       this.todos.splice(index, 1);
-    }
+    },
   },
   watch: {
     todos: {
